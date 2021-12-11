@@ -3,6 +3,7 @@
 #include "ProceduralGenerationGameMode.h"
 #include "ProceduralGenerationCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "ProcGenActor.h"
 
 AProceduralGenerationGameMode::AProceduralGenerationGameMode()
 {

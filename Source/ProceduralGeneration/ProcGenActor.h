@@ -19,10 +19,13 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostActorCreated() override;
+	virtual void PostLoad() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void CreateTriangle();
 
 private:
 	UPROPERTY(VisibleAnywhere)
