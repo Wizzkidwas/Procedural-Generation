@@ -23,8 +23,6 @@ protected:
 	virtual void PostLoad() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	void CreateTriangle();
 
 private:
