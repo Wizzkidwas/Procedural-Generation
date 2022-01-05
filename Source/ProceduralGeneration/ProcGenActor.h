@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "PerlinNoise_ActorComponent.h"
 #include "Math/UnrealMathUtility.h"
 #include "ProcGenActor.generated.h"
 
@@ -40,6 +41,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		int y = 50;
 
+	UPerlinNoise_ActorComponent* Noise;
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;
 	TArray<FVector> normals;
