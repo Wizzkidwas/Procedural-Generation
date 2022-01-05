@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include <libnoise.h>
 #include "ProcGenActor.h"
 
+using namespace noise;
 // Constructor
 AProcGenActor::AProcGenActor()
 {
@@ -86,6 +87,8 @@ void AProcGenActor::SetMaterial()
 void AProcGenActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	module::Perlin myModule;
+	double value = myModule.GetValue(1.25, 0.75, 0.50);
+	UE_LOG(LogTemp, Warning, TEXT("Perlin hello world value: %f"), value);
 }
 
