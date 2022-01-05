@@ -8,78 +8,80 @@ AProcGenActor::AProcGenActor()
 {
 	actorMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	RootComponent = actorMesh;
+	meshMaterial = CreateDefaultSubobject<UMaterial>(TEXT("MeshMaterial"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> Material(TEXT("'/Game/Materials/BlankMaterial'"));
+	meshMaterial = Material.Object;
 }
-
 
 // Called when the actor is dropped into the world in the editor or at runtime
 void AProcGenActor::PostActorCreated()
 {
 	Super::PostActorCreated();
-	CreateTriangle();
+	CreateLandscape();
 }
 
 // Called when actor is already in a level that is opened
 void AProcGenActor::PostLoad()
 {
 	Super::PostLoad();
-	CreateTriangle();
+	CreateLandscape();
 }
 
-// Creates triangles and places them into the mesh
-void AProcGenActor::CreateTriangle()
-{	
-	// Creates vertex positions in local space
-	TArray<FVector> vertices;
-	vertices.Add(FVector(0, 0, 0));
-	vertices.Add(FVector(0, 100, 0));
-	vertices.Add(FVector(100, 0, 0));
-	vertices.Add(FVector(100, 100, 50));
-	vertices.Add(FVector(0, 100, 0));
-	vertices.Add(FVector(100, 0, 0));
-
-	// Adds the vertices to a triangle
-	TArray<int32> Triangles;
-	Triangles.Add(0);
-	Triangles.Add(1);
-	Triangles.Add(2);
-	Triangles.Add(3);
-	Triangles.Add(5);
-	Triangles.Add(4);
-
-	// Sets the normals and UVs
-	TArray<FVector> normals;
-	for (int i = 0; i < 6; i++)
+// Creates many triangles in a landscape style and places them into the mesh
+void AProcGenActor::CreateLandscape()
+{
+	int sectionNumber = 0;
+	for (int i = 0; i < x; i++)
 	{
-		normals.Add(FVector(1, 0, 0));
-	}
-	TArray<FVector2D> UV0;
-	UV0.Add(FVector2D(0, 0));
-	UV0.Add(FVector2D(10, 0));
-	UV0.Add(FVector2D(0, 10));
-	UV0.Add(FVector2D(10, 10));
-	UV0.Add(FVector2D(10, 0));
-	UV0.Add(FVector2D(0, 10));
+		for (int j = 0; j < y; j++)
+		{
+			// Creates vertex positions in local space
+			vertices.Add(FVector(i * 100, j * 100, 0));
+			vertices.Add(FVector(i * 100, 100 + (j * 100), 0));
+			vertices.Add(FVector(100 + (i * 100), j * 100, 0));
+			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), 50));
+			
+			// Adds the vertices to a triangle
+			Triangles.Add(sectionNumber + 0);
+			Triangles.Add(sectionNumber + 1);
+			Triangles.Add(sectionNumber + 2);
+			Triangles.Add(sectionNumber + 3);
+			Triangles.Add(sectionNumber + 2);
+			Triangles.Add(sectionNumber + 1);
+			sectionNumber += 4;
 
-	// Processes the tangents
-	TArray<FProcMeshTangent> tangents;
-	for (int i = 0; i < 6; i++)
-	{
-		tangents.Add(FProcMeshTangent(0, 0, -1));
-	}
+			// Creates normals, tangents and sets up colours
+			for (int k = 0; k < 4; k++)
+			{
+				normals.Add(FVector(0, 0, 1));
+				tangents.Add(FProcMeshTangent(0, 0, -1));
+				vertexColors.Add(FLinearColor(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), 1.0f));
+			}
 
-	// Adds colour
-	TArray<FLinearColor> vertexColors;
-	for (int i = 0; i < 6; i++)
-	{
-		vertexColors.Add(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+			// Sets up UVs
+			UV0.Add(FVector2D(0, 0));
+			UV0.Add(FVector2D(1, 0));
+			UV0.Add(FVector2D(0, 1));
+			UV0.Add(FVector2D(1, 1));
+		}
 	}
-	
 	// Combines all the information and adds it to the mesh
 	actorMesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
 	// Enables collision
 	actorMesh->ContainsPhysicsTriMeshData(true);
+	SetMaterial();
 }
 
+// Sets Material
+void AProcGenActor::SetMaterial()
+{
+	// If it finds a valid material
+	if (meshMaterial != nullptr)
+	{
+		auto MaterialInstance = UMaterialInstanceDynamic::Create(meshMaterial, this);
+		actorMesh->SetMaterial(0, MaterialInstance);
+	}
+}
 // Called when the game starts or when spawned
 void AProcGenActor::BeginPlay()
 {

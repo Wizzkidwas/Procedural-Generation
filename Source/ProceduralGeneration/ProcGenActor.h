@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "Math/UnrealMathUtility.h"
 #include "ProcGenActor.generated.h"
 
 UCLASS()
@@ -23,10 +24,26 @@ protected:
 	virtual void PostLoad() override;
 
 public:	
-	void CreateTriangle();
+	void CreateLandscape();
+	void SetMaterial();
 
 private:
 	UPROPERTY(VisibleAnywhere)
 		UProceduralMeshComponent* actorMesh;
 
+	UPROPERTY(EditAnywhere)
+		class UMaterial* meshMaterial;
+	
+	UPROPERTY(VisibleAnywhere)
+		int x = 50;
+	
+	UPROPERTY(VisibleAnywhere)
+		int y = 50;
+
+	TArray<FVector> vertices;
+	TArray<int32> Triangles;
+	TArray<FVector> normals;
+	TArray<FVector2D> UV0;
+	TArray<FProcMeshTangent> tangents;
+	TArray<FLinearColor> vertexColors;
 };
