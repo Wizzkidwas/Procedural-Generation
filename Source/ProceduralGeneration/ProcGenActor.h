@@ -35,10 +35,10 @@ private:
 	UPROPERTY(EditAnywhere)
 		class UMaterial* meshMaterial;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 		int x = 50;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 		int y = 50;
 
 	UPerlinNoise_ActorComponent* Noise;

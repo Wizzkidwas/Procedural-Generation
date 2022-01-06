@@ -3,7 +3,7 @@
 #include <libnoise.h>
 #include "ProcGenActor.h"
 
-using namespace noise;
+// using namespace noise;
 // Constructor
 AProcGenActor::AProcGenActor()
 {
@@ -37,12 +37,12 @@ void AProcGenActor::CreateLandscape()
 		for (int j = 0; j < y; j++)
 		{
 			// Creates vertex positions in local space
-			vertices.Add(FVector(i * 100, j * 100, 0));
-			vertices.Add(FVector(i * 100, 100 + (j * 100), 0));
-			vertices.Add(FVector(100 + (i * 100), j * 100, 0));
-			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), 50));
+			vertices.Add(FVector(i * 100, j * 100, FMath::RandRange(0, 50)));
+			vertices.Add(FVector(i * 100, 100 + (j * 100), FMath::RandRange(0, 50)));
+			vertices.Add(FVector(100 + (i * 100), j * 100, FMath::RandRange(0, 50)));
+			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), FMath::RandRange(0, 50)));
 			
-			// Adds the vertices to a triangle
+			// Adds the vertices to a triangle array to form a quad
 			Triangles.Add(sectionNumber + 0);
 			Triangles.Add(sectionNumber + 1);
 			Triangles.Add(sectionNumber + 2);
@@ -71,6 +71,9 @@ void AProcGenActor::CreateLandscape()
 	// Enables collision
 	actorMesh->ContainsPhysicsTriMeshData(true);
 	SetMaterial();
+
+	// Look for a way to make unreal calculate normals
+	// Large high res textures, tweak colours based on height
 }
 
 // Sets Material
@@ -87,7 +90,7 @@ void AProcGenActor::SetMaterial()
 void AProcGenActor::BeginPlay()
 {
 	Super::BeginPlay();
-	module::Perlin myModule;
+	noise::module::Perlin myModule;
 	double value = myModule.GetValue(1.25, 0.75, 0.50);
 	UE_LOG(LogTemp, Warning, TEXT("Perlin hello world value: %f"), value);
 }

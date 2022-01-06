@@ -129,7 +129,6 @@ noise::NoiseQuality UPerlinNoise_ActorComponent::convertBPNoiseQuality(qualities
 	case qualities::QUALITY_FAST:
 		return noise::QUALITY_FAST;
 		break;
-		break;
 	case qualities::QUALITY_STD:
 		return noise::QUALITY_STD;
 		break;

@@ -20,7 +20,7 @@ UENUM(BluePrintType)
 		};
 	}
 
-// Change UNDERWATER_API to whatever your project API name is
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROCEDURALGENERATION_API UPerlinNoise_ActorComponent : public UActorComponent
 {
