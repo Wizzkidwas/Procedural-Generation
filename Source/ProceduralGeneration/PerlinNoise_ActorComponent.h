@@ -10,15 +10,15 @@
 
 // UE4's version of an enum that corresponds to perlin noise qualities.
 UENUM(BluePrintType)
-	namespace qualities
+namespace qualities
+{
+	enum PerlinNoiseQuality
 	{
-		enum PerlinNoiseQuality
-		{
-			QUALITY_FAST	UMETA(DisplayName = "Fast"),
-			QUALITY_STD		UMETA(DisplayName = "Standard"),
-			QUALITY_BEST	UMETA(DisplayName = "Best")
-		};
-	}
+		QUALITY_FAST	UMETA(DisplayName = "Fast"),
+		QUALITY_STD		UMETA(DisplayName = "Standard"),
+		QUALITY_BEST	UMETA(DisplayName = "Best")
+	};
+}
 
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -44,7 +44,7 @@ public:
 	// Simple setup function that can set all the options at once
 	UFUNCTION(BluePrintCallable, Category = "Perlin")				// This is the enum
 		void SetupOptions(float frequency, float lacunarity, qualities::PerlinNoiseQuality noiseQuality, int octaveCount, float persistence, int seed);
-	
+
 	// Setters/getters for all the individual noise properties
 	// "BluepPrintCallable" allows functions to be used from the blueprints
 	UFUNCTION(BluePrintCallable, Category = "Perlin")

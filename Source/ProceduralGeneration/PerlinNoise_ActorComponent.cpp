@@ -9,7 +9,7 @@ UPerlinNoise_ActorComponent::UPerlinNoise_ActorComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	UpdateOptions();
-	
+
 	// ...
 }
 
@@ -18,7 +18,7 @@ UPerlinNoise_ActorComponent::UPerlinNoise_ActorComponent()
 void UPerlinNoise_ActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// ...
 }
 
