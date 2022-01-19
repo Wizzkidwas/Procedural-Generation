@@ -96,7 +96,7 @@ private:
 	qualities::PerlinNoiseQuality convertBPNoiseQuality(noise::NoiseQuality quality) const;
 	void UpdateOptions();
 
-	// Those are private because they shouldn't be modified at runtime, but can be edited in the editor before running the game
+	// These are private because they shouldn't be modified at runtime, but can be edited in the editor before running the game
 	UPROPERTY(EditAnywhere, Category = "Perlin")
 		float Frequency = 1.0;
 	UPROPERTY(EditAnywhere, Category = "Perlin")

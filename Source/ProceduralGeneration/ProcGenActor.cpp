@@ -32,16 +32,16 @@ void AProcGenActor::PostLoad()
 void AProcGenActor::CreateLandscape()
 {
 	int sectionNumber = 0;
-	for (int i = 0; i < x; i++)
+	for (int i = 0; i < xSize; i++)
 	{
-		for (int j = 0; j < y; j++)
+		for (int j = 0; j < ySize; j++)
 		{
 			// Creates vertex positions in local space
 			vertices.Add(FVector(i * 100, j * 100, FMath::RandRange(0, 50)));
 			vertices.Add(FVector(i * 100, 100 + (j * 100), FMath::RandRange(0, 50)));
 			vertices.Add(FVector(100 + (i * 100), j * 100, FMath::RandRange(0, 50)));
 			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), FMath::RandRange(0, 50)));
-			
+
 			// Adds the vertices to a triangle array to form a quad
 			Triangles.Add(sectionNumber + 0);
 			Triangles.Add(sectionNumber + 1);
@@ -67,7 +67,7 @@ void AProcGenActor::CreateLandscape()
 		}
 	}
 	// Combines all the information and adds it to the mesh
-	actorMesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
+	actorMesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColours, tangents, true);
 	// Enables collision
 	actorMesh->ContainsPhysicsTriMeshData(true);
 	SetMaterial();
@@ -90,8 +90,6 @@ void AProcGenActor::SetMaterial()
 void AProcGenActor::BeginPlay()
 {
 	Super::BeginPlay();
-	noise::module::Perlin myModule;
-	double value = myModule.GetValue(1.25, 0.75, 0.50);
+	double value = perlinNoise.GetValue(1.25, 0.75, 0.50);
 	UE_LOG(LogTemp, Warning, TEXT("Perlin hello world value: %f"), value);
 }
-

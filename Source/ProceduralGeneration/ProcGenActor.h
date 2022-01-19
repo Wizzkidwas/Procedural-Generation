@@ -13,8 +13,8 @@ UCLASS()
 class PROCEDURALGENERATION_API AProcGenActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AProcGenActor();
 
@@ -24,7 +24,7 @@ protected:
 	virtual void PostActorCreated() override;
 	virtual void PostLoad() override;
 
-public:	
+public:
 	void CreateLandscape();
 	void SetMaterial();
 
@@ -34,18 +34,19 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		class UMaterial* meshMaterial;
-	
+
 	UPROPERTY(EditAnywhere)
-		int x = 50;
-	
+		int xSize = 50;
+
 	UPROPERTY(EditAnywhere)
-		int y = 50;
+		int ySize = 50;
 
 	UPerlinNoise_ActorComponent* Noise;
+	noise::module::Perlin perlinNoise;
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;
 	TArray<FVector> normals;
 	TArray<FVector2D> UV0;
 	TArray<FProcMeshTangent> tangents;
-	TArray<FLinearColor> vertexColors;
+	TArray<FLinearColor> vertexColours;
 };
