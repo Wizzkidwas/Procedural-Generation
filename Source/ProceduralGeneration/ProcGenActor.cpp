@@ -56,7 +56,7 @@ void AProcGenActor::CreateLandscape()
 			{
 				normals.Add(FVector(0, 0, 1));
 				tangents.Add(FProcMeshTangent(0, 0, -1));
-				vertexColors.Add(FLinearColor(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), 1.0f));
+				vertexColours.Add(FLinearColor(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), 1.0f));
 			}
 
 			// Sets up UVs
