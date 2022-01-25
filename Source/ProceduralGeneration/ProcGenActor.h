@@ -43,6 +43,9 @@ private:
 		int ySize = 50;
 
 	UPROPERTY(EditAnywhere)
+		int scale = 1000;
+
+	UPROPERTY(EditAnywhere)
 		UPerlinNoise_ActorComponent* Noise;
 	
 	noise::module::Perlin perlinNoise;

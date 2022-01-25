@@ -36,11 +36,17 @@ void AProcGenActor::CreateLandscape()
 	{
 		for (int j = 0; j < ySize; j++)
 		{
+			// Old height: FMath::RandRange(0, 50)
 			// Creates vertex positions in local space
-			vertices.Add(FVector(i * 100, j * 100, FMath::RandRange(0, 50)));
-			vertices.Add(FVector(i * 100, 100 + (j * 100), FMath::RandRange(0, 50)));
-			vertices.Add(FVector(100 + (i * 100), j * 100, FMath::RandRange(0, 50)));
-			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), FMath::RandRange(0, 50)));
+			double value1 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.01) * scale;
+			double value2 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.02) * scale;
+			double value3 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.03) * scale;
+			double value4 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.04) * scale;
+
+			vertices.Add(FVector(i * 100, j * 100, value1));
+			vertices.Add(FVector(i * 100, 100 + (j * 100), value2));
+			vertices.Add(FVector(100 + (i * 100), j * 100, value3));
+			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), value4));
 
 			// Adds the vertices to a triangle array to form a quad
 			Triangles.Add(sectionNumber + 0);
@@ -49,16 +55,17 @@ void AProcGenActor::CreateLandscape()
 			Triangles.Add(sectionNumber + 3);
 			Triangles.Add(sectionNumber + 2);
 			Triangles.Add(sectionNumber + 1);
-			sectionNumber += 4;
 
 			// Creates normals, tangents and sets up colours
 			for (int k = 0; k < 4; k++)
 			{
 				normals.Add(FVector(0, 0, 1));
 				tangents.Add(FProcMeshTangent(0, 0, -1));
-				vertexColours.Add(FLinearColor(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), 1.0f));
+				// vertexColours.Add(FLinearColor(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), 1.0f));
+				vertexColours.Add(FLinearColor(value1 / 10, value1 / 10, value1 / 10));
 			}
-
+			
+			sectionNumber += 4;
 			// Sets up UVs
 			/*UV0.Add(FVector2D(0, 0));
 			UV0.Add(FVector2D(1, 0));
