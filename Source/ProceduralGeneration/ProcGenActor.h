@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "KismetProceduralMeshLibrary.h"
 #include "PerlinNoise_ActorComponent.h"
 #include "Math/UnrealMathUtility.h"
 #include "ProcGenActor.generated.h"
@@ -41,7 +42,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		int ySize = 50;
 
-	UPerlinNoise_ActorComponent* Noise;
+	UPROPERTY(EditAnywhere)
+		UPerlinNoise_ActorComponent* Noise;
+	
 	noise::module::Perlin perlinNoise;
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;

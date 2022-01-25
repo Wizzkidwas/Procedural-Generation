@@ -60,10 +60,10 @@ void AProcGenActor::CreateLandscape()
 			}
 
 			// Sets up UVs
-			UV0.Add(FVector2D(0, 0));
+			/*UV0.Add(FVector2D(0, 0));
 			UV0.Add(FVector2D(1, 0));
 			UV0.Add(FVector2D(0, 1));
-			UV0.Add(FVector2D(1, 1));
+			UV0.Add(FVector2D(1, 1));*/
 		}
 	}
 	// Combines all the information and adds it to the mesh
@@ -71,8 +71,10 @@ void AProcGenActor::CreateLandscape()
 	// Enables collision
 	actorMesh->ContainsPhysicsTriMeshData(true);
 	SetMaterial();
-
+	
 	// Look for a way to make unreal calculate normals
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(vertices, Triangles, UV0, normals, tangents);
+
 	// Large high res textures, tweak colours based on height
 }
 
