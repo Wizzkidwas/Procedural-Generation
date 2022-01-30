@@ -18,14 +18,17 @@ AProcGenActor::AProcGenActor()
 void AProcGenActor::PostActorCreated()
 {
 	Super::PostActorCreated();
-	CreateLandscape();
+	CreateVertices();
+	JoinVertices();
+	CombineInformation();
+	SetMaterial();
 }
 
 // Called when actor is already in a level that is opened
 void AProcGenActor::PostLoad()
 {
 	Super::PostLoad();
-	CreateLandscape();
+	// CreateLandscape();
 }
 
 // Creates many triangles in a landscape style and places them into the mesh
@@ -43,12 +46,14 @@ void AProcGenActor::CreateLandscape()
 			double value3 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.03) * scale;
 			double value4 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.04) * scale;
 
+			// Create one per loop and connect in a later loop
 			vertices.Add(FVector(i * 100, j * 100, value1));
 			vertices.Add(FVector(i * 100, 100 + (j * 100), value2));
 			vertices.Add(FVector(100 + (i * 100), j * 100, value3));
 			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), value4));
 
 			// Adds the vertices to a triangle array to form a quad
+			// This section in another loop afterwards, joining the individual vertices
 			Triangles.Add(sectionNumber + 0);
 			Triangles.Add(sectionNumber + 1);
 			Triangles.Add(sectionNumber + 2);
@@ -83,6 +88,67 @@ void AProcGenActor::CreateLandscape()
 	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(vertices, Triangles, UV0, normals, tangents);
 
 	// Large high res textures, tweak colours based on height
+}
+
+// Sets up vertices
+void AProcGenActor::CreateVertices()
+{
+	int vertexNumber = 0;
+	for (int i = 0; i < xSize; i++)
+	{
+		for (int j = 0; j < ySize; j++)
+		{
+			// Old height: FMath::RandRange(0, 50)
+			// Creates vertex positions in local space
+			double perlinValue = perlinNoise.GetValue(i * 0.001, j * 0.001, vertexNumber + 0.01) * scale;
+
+			// Create one per loop and connect in a later loop
+			vertices.Add(FVector(i * 100, j * 100, perlinValue));
+			vertexNumber++;
+
+			// Add normals and tangents
+			normals.Add(FVector(0, 0, 1));
+			tangents.Add(FProcMeshTangent(0, 0, -1));
+			vertexColours.Add(FLinearColor(perlinValue / 10, perlinValue / 10, perlinValue / 10));
+		
+
+			// Sets up UVs
+			UV0.Add(FVector2D(0, 0));
+		}
+	}
+}
+
+// Joins the vertices as triangles
+void AProcGenActor::JoinVertices()
+{
+	int vertexNumber = 0;
+	// -1 on loops to avoid edges, which would cause out of bounds errors or really weird triangle connections
+	for (int i = 0; i < xSize; i++)
+	{
+		for (int j = 0; j < ySize - 1; j++)
+		{
+			Triangles.Add(vertexNumber);				// Vertex point
+			Triangles.Add(vertexNumber + 1);			// Vertex next to it
+			Triangles.Add(vertexNumber + xSize + 1);	// Vertex diagonal from it
+			Triangles.Add(vertexNumber);				// Vertex point
+			Triangles.Add(vertexNumber + xSize + 1);	// Vertex diagonal from it
+			Triangles.Add(vertexNumber + xSize);		// Vertex below it
+
+			vertexNumber++; // Moves to next vertex
+		}
+	}
+}
+
+void AProcGenActor::CombineInformation()
+{
+	// Combines all the information and adds it to the mesh
+	actorMesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColours, tangents, true);
+	
+	// Enables collision
+	actorMesh->ContainsPhysicsTriMeshData(true);
+
+	// Look for a way to make unreal calculate normals
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(vertices, Triangles, UV0, normals, tangents);
 }
 
 // Sets Material

@@ -27,6 +27,9 @@ protected:
 
 public:
 	void CreateLandscape();
+	void CreateVertices();
+	void JoinVertices();
+	void CombineInformation();
 	void SetMaterial();
 
 private:
@@ -40,7 +43,7 @@ private:
 		int xSize = 50;
 
 	UPROPERTY(EditAnywhere)
-		int ySize = 50;
+		int ySize = 25;
 
 	UPROPERTY(EditAnywhere)
 		int scale = 1000;
