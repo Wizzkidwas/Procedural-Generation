@@ -43,7 +43,7 @@ private:
 		int xSize = 50;
 
 	UPROPERTY(EditAnywhere)
-		int ySize = 25;
+		int ySize = 50;
 
 	UPROPERTY(EditAnywhere)
 		int scale = 1000;

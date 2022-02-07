@@ -101,7 +101,8 @@ void AProcGenActor::CreateVertices()
 			// Old height: FMath::RandRange(0, 50)
 			// Creates vertex positions in local space
 			double perlinValue = perlinNoise.GetValue(i * 0.001, j * 0.001, vertexNumber + 0.01) * scale;
-
+			
+			if (perlinValue < 0) perlinValue = -perlinValue;
 			// Create one per loop and connect in a later loop
 			vertices.Add(FVector(i * 100, j * 100, perlinValue));
 			vertexNumber++;
@@ -109,7 +110,7 @@ void AProcGenActor::CreateVertices()
 			// Add normals and tangents
 			normals.Add(FVector(0, 0, 1));
 			tangents.Add(FProcMeshTangent(0, 0, -1));
-			vertexColours.Add(FLinearColor(perlinValue / 10, perlinValue / 10, perlinValue / 10));
+			vertexColours.Add(FLinearColor(perlinValue / scale, perlinValue / scale, perlinValue / scale));
 		
 
 			// Sets up UVs
@@ -123,7 +124,7 @@ void AProcGenActor::JoinVertices()
 {
 	int vertexNumber = 0;
 	// -1 on loops to avoid edges, which would cause out of bounds errors or really weird triangle connections
-	for (int i = 0; i < xSize; i++)
+	for (int i = 0; i < xSize - 1; i++)
 	{
 		for (int j = 0; j < ySize - 1; j++)
 		{
