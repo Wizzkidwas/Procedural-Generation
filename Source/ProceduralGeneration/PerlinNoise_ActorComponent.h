@@ -90,8 +90,10 @@ public:
 	UFUNCTION(BluePrintCallable, Category = "Perlin")
 		void SetRandomSeed();
 
-private:
+public:
 	noise::module::Perlin perlinNoise;
+
+private:
 	noise::NoiseQuality convertBPNoiseQuality(qualities::PerlinNoiseQuality quality) const;
 	qualities::PerlinNoiseQuality convertBPNoiseQuality(noise::NoiseQuality quality) const;
 	void UpdateOptions();

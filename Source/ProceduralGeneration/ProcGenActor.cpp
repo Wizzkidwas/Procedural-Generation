@@ -12,12 +12,14 @@ AProcGenActor::AProcGenActor()
 	meshMaterial = CreateDefaultSubobject<UMaterial>(TEXT("MeshMaterial"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> Material(TEXT("'/Game/Materials/BlankMaterial'"));
 	meshMaterial = Material.Object;
+	Noise = CreateDefaultSubobject< UPerlinNoise_ActorComponent>(TEXT("Noise"));
 }
 
 // Called when the actor is dropped into the world in the editor or at runtime
 void AProcGenActor::PostActorCreated()
 {
 	Super::PostActorCreated();
+	Noise->SetupOptions(Noise->GetFrequency(), Noise->GetLacunarity(), Noise->GetNoiseQuality(), Noise->GetOctaveCount(), Noise->GetPersistence(), Noise->GetSeed());
 	CreateVertices();
 	JoinVertices();
 	CombineInformation();
@@ -41,10 +43,10 @@ void AProcGenActor::CreateLandscape()
 		{
 			// Old height: FMath::RandRange(0, 50)
 			// Creates vertex positions in local space
-			double value1 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.01) * scale;
-			double value2 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.02) * scale;
-			double value3 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.03) * scale;
-			double value4 = perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.04) * scale;
+			double value1 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.01) * scale;
+			double value2 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.02) * scale;
+			double value3 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.03) * scale;
+			double value4 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.04) * scale;
 
 			// Create one per loop and connect in a later loop
 			vertices.Add(FVector(i * 100, j * 100, value1));
@@ -100,19 +102,19 @@ void AProcGenActor::CreateVertices()
 		{
 			// Old height: FMath::RandRange(0, 50)
 			// Creates vertex positions in local space
-			double perlinValue = perlinNoise.GetValue(i * 0.001, j * 0.001, vertexNumber + 0.01) * scale;
-			
+			float perlinValue = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, vertexNumber + 0.01) * scale;
+
 			if (perlinValue < 0) perlinValue = -perlinValue;
 			// Create one per loop and connect in a later loop
 			vertices.Add(FVector(i * 100, j * 100, perlinValue));
-			vertexNumber++;
 
 			// Add normals and tangents
 			normals.Add(FVector(0, 0, 1));
 			tangents.Add(FProcMeshTangent(0, 0, -1));
-			vertexColours.Add(FLinearColor(perlinValue / scale, perlinValue / scale, perlinValue / scale));
-		
-
+			// vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+			vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+			vertexNumber++;
+			
 			// Sets up UVs
 			UV0.Add(FVector2D(0, 0));
 		}
@@ -124,9 +126,9 @@ void AProcGenActor::JoinVertices()
 {
 	int vertexNumber = 0;
 	// -1 on loops to avoid edges, which would cause out of bounds errors or really weird triangle connections
-	for (int i = 0; i < xSize - 1; i++)
+	for (int i = 0; i < xSize; i++)
 	{
-		for (int j = 0; j < ySize - 1; j++)
+		for (int j = 0; j < ySize; j++)
 		{
 			Triangles.Add(vertexNumber);				// Vertex point
 			Triangles.Add(vertexNumber + 1);			// Vertex next to it
@@ -166,6 +168,6 @@ void AProcGenActor::SetMaterial()
 void AProcGenActor::BeginPlay()
 {
 	Super::BeginPlay();
-	double value = perlinNoise.GetValue(1.25, 0.75, 0.50);
+	double value = Noise->perlinNoise.GetValue(1.25, 0.75, 0.50);
 	UE_LOG(LogTemp, Warning, TEXT("Perlin hello world value: %f"), value);
 }

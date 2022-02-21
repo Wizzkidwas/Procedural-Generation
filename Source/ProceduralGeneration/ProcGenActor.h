@@ -40,18 +40,17 @@ private:
 		class UMaterial* meshMaterial;
 
 	UPROPERTY(EditAnywhere)
-		int xSize = 50;
+		int xSize = 100;
 
 	UPROPERTY(EditAnywhere)
-		int ySize = 50;
+		int ySize = 100;
 
 	UPROPERTY(EditAnywhere)
 		int scale = 1000;
 
 	UPROPERTY(EditAnywhere)
-		UPerlinNoise_ActorComponent* Noise;
+		UPerlinNoise_ActorComponent* Noise;	// Use this one to call from the Component
 	
-	noise::module::Perlin perlinNoise;
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;
 	TArray<FVector> normals;
