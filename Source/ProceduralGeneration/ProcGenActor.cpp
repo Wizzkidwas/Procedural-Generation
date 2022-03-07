@@ -138,6 +138,10 @@ void AProcGenActor::JoinVertices()
 			Triangles.Add(vertexNumber + xSize);		// Vertex below it
 
 			vertexNumber++; // Moves to next vertex
+			/*if (j == ySize - 1)
+			{
+				vertexNumber++;	// Skips the edge vertex
+			}*/
 		}
 	}
 }
