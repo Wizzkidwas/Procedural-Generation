@@ -126,7 +126,7 @@ void AProcGenActor::JoinVertices()
 {
 	int vertexNumber = 0;
 	// -1 on loops to avoid edges, which would cause out of bounds errors or really weird triangle connections
-	for (int i = 0; i < xSize; i++)
+	for (int i = 0; i < xSize - 2; i++)
 	{
 		for (int j = 0; j < ySize; j++)
 		{
@@ -138,10 +138,10 @@ void AProcGenActor::JoinVertices()
 			Triangles.Add(vertexNumber + xSize);		// Vertex below it
 
 			vertexNumber++; // Moves to next vertex
-			/*if (j == ySize - 1)
+			if (vertexNumber % ySize == ySize - 1)
 			{
 				vertexNumber++;	// Skips the edge vertex
-			}*/
+			}
 		}
 	}
 }
