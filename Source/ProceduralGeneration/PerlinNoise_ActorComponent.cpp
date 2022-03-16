@@ -18,7 +18,7 @@ UPerlinNoise_ActorComponent::UPerlinNoise_ActorComponent()
 void UPerlinNoise_ActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UpdateOptions();
 	// ...
 }
 
@@ -29,6 +29,11 @@ void UPerlinNoise_ActorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UPerlinNoise_ActorComponent::OnComponentCreated()
+{
+	UpdateOptions();
 }
 
 // Getters

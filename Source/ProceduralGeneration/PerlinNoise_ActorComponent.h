@@ -35,6 +35,8 @@ protected:
 	virtual void BeginPlay() override;
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	// Called when created
+	virtual void OnComponentCreated() override;
 
 public:
 	// The main function to call to get noise output
@@ -46,7 +48,7 @@ public:
 		void SetupOptions(float frequency, float lacunarity, qualities::PerlinNoiseQuality noiseQuality, int octaveCount, float persistence, int seed);
 
 	// Setters/getters for all the individual noise properties
-	// "BluepPrintCallable" allows functions to be used from the blueprints
+	// "BluePrintCallable" allows functions to be used from the blueprints
 	UFUNCTION(BluePrintCallable, Category = "Perlin")
 		float GetFrequency() const;
 
