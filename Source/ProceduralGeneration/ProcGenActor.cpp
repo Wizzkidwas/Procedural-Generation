@@ -22,6 +22,7 @@ void AProcGenActor::PostActorCreated()
 	Noise->SetupOptions(Noise->GetFrequency(), Noise->GetLacunarity(), Noise->GetNoiseQuality(), Noise->GetOctaveCount(), Noise->GetPersistence(), Noise->GetSeed());
 	CreateVertices();
 	JoinVertices();
+	SetColours();
 	CombineInformation();
 	SetMaterial();
 }
@@ -30,66 +31,6 @@ void AProcGenActor::PostActorCreated()
 void AProcGenActor::PostLoad()
 {
 	Super::PostLoad();
-	// CreateLandscape();
-}
-
-// Creates many triangles in a landscape style and places them into the mesh
-void AProcGenActor::CreateLandscape()
-{
-	int sectionNumber = 0;
-	for (int i = 0; i < xSize; i++)
-	{
-		for (int j = 0; j < ySize; j++)
-		{
-			// Old height: FMath::RandRange(0, 50)
-			// Creates vertex positions in local space
-			double value1 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.01) * scale;
-			double value2 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.02) * scale;
-			double value3 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.03) * scale;
-			double value4 = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, sectionNumber + 0.04) * scale;
-
-			// Create one per loop and connect in a later loop
-			vertices.Add(FVector(i * 100, j * 100, value1));
-			vertices.Add(FVector(i * 100, 100 + (j * 100), value2));
-			vertices.Add(FVector(100 + (i * 100), j * 100, value3));
-			vertices.Add(FVector(100 + (i * 100), 100 + (j * 100), value4));
-
-			// Adds the vertices to a triangle array to form a quad
-			// This section in another loop afterwards, joining the individual vertices
-			Triangles.Add(sectionNumber + 0);
-			Triangles.Add(sectionNumber + 1);
-			Triangles.Add(sectionNumber + 2);
-			Triangles.Add(sectionNumber + 3);
-			Triangles.Add(sectionNumber + 2);
-			Triangles.Add(sectionNumber + 1);
-
-			// Creates normals, tangents and sets up colours
-			for (int k = 0; k < 4; k++)
-			{
-				normals.Add(FVector(0, 0, 1));
-				tangents.Add(FProcMeshTangent(0, 0, -1));
-				// vertexColours.Add(FLinearColor(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), 1.0f));
-				vertexColours.Add(FLinearColor(value1 / 10, value1 / 10, value1 / 10));
-			}
-			
-			sectionNumber += 4;
-			// Sets up UVs
-			/*UV0.Add(FVector2D(0, 0));
-			UV0.Add(FVector2D(1, 0));
-			UV0.Add(FVector2D(0, 1));
-			UV0.Add(FVector2D(1, 1));*/
-		}
-	}
-	// Combines all the information and adds it to the mesh
-	actorMesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColours, tangents, true);
-	// Enables collision
-	actorMesh->ContainsPhysicsTriMeshData(true);
-	SetMaterial();
-	
-	// Look for a way to make unreal calculate normals
-	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(vertices, Triangles, UV0, normals, tangents);
-
-	// Large high res textures, tweak colours based on height
 }
 
 // Sets up vertices
@@ -102,7 +43,7 @@ void AProcGenActor::CreateVertices()
 		{
 			// Old height: FMath::RandRange(0, 50)
 			// Creates vertex positions in local space
-			float perlinValue = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, vertexNumber + 0.01) * scale;
+			float perlinValue = Noise->perlinNoise.GetValue(i * 0.001, j * 0.001, (vertexNumber / 2) + 0.01) * scale;
 
 			if (perlinValue < 0) perlinValue = -perlinValue;
 			// Create one per loop and connect in a later loop
@@ -117,23 +58,23 @@ void AProcGenActor::CreateVertices()
 			case colours::SNOW:
 				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
 				break;
-			
-			// Full green!
+
+				// Full green!
 			case colours::GRASS:
 				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / (scale * 10), vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 10)));
 				break;
-			
-			// Aims for a Pale yellow colour to reflect sand
+
+				// Aims for a Pale yellow colour to reflect sand
 			case colours::DESERT:
 				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 2)));
 				break;
-			// Defaults to SNOW colours
+				// Defaults to SNOW colours
 			default:
 				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
 				break;
 			}
 			vertexNumber++;
-			
+
 			// Sets up UVs
 			UV0.Add(FVector2D(0, 0));
 		}
@@ -165,11 +106,45 @@ void AProcGenActor::JoinVertices()
 	}
 }
 
+void AProcGenActor::SetColours()
+{
+	int vertexNumber = 0;
+	for (int i = 0; i < xSize; i++)
+	{
+		for (int j = 0; j < ySize; j++)
+		{
+			switch (BiomeType)
+			{
+			// Full white
+			case colours::SNOW:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+				break;
+
+			// Full green
+			case colours::GRASS:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / (scale * 10), vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 10)));
+				break;
+
+			// Aims for a Pale yellow colour to reflect sand
+			case colours::DESERT:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 2)));
+				break;
+			
+			// Defaults to SNOW colours
+			default:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+				break;
+			}
+			vertexNumber++;
+		}
+	}
+}
+
 void AProcGenActor::CombineInformation()
 {
 	// Combines all the information and adds it to the mesh
 	actorMesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColours, tangents, true);
-	
+
 	// Enables collision
 	actorMesh->ContainsPhysicsTriMeshData(true);
 
