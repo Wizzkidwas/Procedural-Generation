@@ -112,7 +112,26 @@ void AProcGenActor::CreateVertices()
 			normals.Add(FVector(0, 0, 1));
 			tangents.Add(FProcMeshTangent(0, 0, -1));
 			// vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
-			vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+			switch (BiomeType)
+			{
+			case colours::SNOW:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+				break;
+			
+			// Full green!
+			case colours::GRASS:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / (scale * 10), vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 10)));
+				break;
+			
+			// Aims for a Pale yellow colour to reflect sand
+			case colours::DESERT:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 2)));
+				break;
+			// Defaults to SNOW colours
+			default:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
+				break;
+			}
 			vertexNumber++;
 			
 			// Sets up UVs
@@ -168,6 +187,16 @@ void AProcGenActor::SetMaterial()
 		actorMesh->SetMaterial(0, MaterialInstance);
 	}
 }
+colours::Biome AProcGenActor::GetBiomeType() const
+{
+	return colours::Biome();
+}
+
+void AProcGenActor::SetBiomeType(colours::Biome biomeType)
+{
+	BiomeType = biomeType;
+}
+
 // Called when the game starts or when spawned
 void AProcGenActor::BeginPlay()
 {

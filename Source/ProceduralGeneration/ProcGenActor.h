@@ -44,6 +44,7 @@ public:
 	void CombineInformation();
 	void SetMaterial();
 	
+	// Allows biome type to be set in blueprints
 	UFUNCTION(BluePrintCallable, Category = "Biomes")
 		colours::Biome GetBiomeType() const;
 
@@ -71,7 +72,7 @@ private:
 		UPerlinNoise_ActorComponent* Noise;	// Use this one to call from the Component
 	
 	UPROPERTY(EditAnywhere, Category = "Biome")
-		TEnumAsByte<colours::Biome> BiomeType = colours::SNOW;
+		TEnumAsByte<colours::Biome> BiomeType = colours::SNOW;	// Defaults to white landscape
 
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;
