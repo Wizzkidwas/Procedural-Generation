@@ -52,27 +52,7 @@ void AProcGenActor::CreateVertices()
 			// Add normals and tangents
 			normals.Add(FVector(0, 0, 1));
 			tangents.Add(FProcMeshTangent(0, 0, -1));
-			// vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
-			switch (BiomeType)
-			{
-			case colours::SNOW:
-				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
-				break;
-
-				// Full green!
-			case colours::GRASS:
-				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / (scale * 10), vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 10)));
-				break;
-
-				// Aims for a Pale yellow colour to reflect sand
-			case colours::DESERT:
-				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 2)));
-				break;
-				// Defaults to SNOW colours
-			default:
-				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));
-				break;
-			}
+			
 			vertexNumber++;
 
 			// Sets up UVs
@@ -130,6 +110,21 @@ void AProcGenActor::SetColours()
 				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / (scale * 2)));
 				break;
 			
+			// Deep blue
+			case colours::WATER:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / (scale * 10), vertices[vertexNumber].Z / (scale * 10), vertices[vertexNumber].Z / scale));
+				break;
+
+			// Dark red/brownish like an arid desert
+			case colours::ARID:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / (scale * 1.5), vertices[vertexNumber].Z / (scale * 4), vertices[vertexNumber].Z / (scale * 10)));
+				break;
+
+			// Just RED
+			case colours::RED:
+				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, 0.0f, 0.0f));
+				break;
+
 			// Defaults to SNOW colours
 			default:
 				vertexColours.Add(FLinearColor(vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale, vertices[vertexNumber].Z / scale));

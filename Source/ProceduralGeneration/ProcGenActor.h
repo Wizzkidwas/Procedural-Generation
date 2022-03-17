@@ -18,7 +18,10 @@ namespace colours
 	{
 		GRASS	UMETA(DisplayName = "Grasslands"),
 		DESERT	UMETA(DisplayName = "Desert"),
-		SNOW	UMETA(DisplayName = "Snowy")
+		SNOW	UMETA(DisplayName = "Tundra"),
+		WATER	UMETA(DisplayName = "Water"),
+		ARID	UMETA(DisplayName = "Arid Desert"),
+		RED		UMETA(DisplayName = "Red")
 	};
 }
 
