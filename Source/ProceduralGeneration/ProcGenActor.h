@@ -10,7 +10,19 @@
 #include "Math/UnrealMathUtility.h"
 #include "ProcGenActor.generated.h"
 
-UCLASS()
+// UE4's version of an enum that corresponds to biome type.
+UENUM(BluePrintType)
+namespace colours
+{
+	enum Biome
+	{
+		GRASS	UMETA(DisplayName = "Grasslands"),
+		DESERT	UMETA(DisplayName = "Desert"),
+		SNOW	UMETA(DisplayName = "Snowy")
+	};
+}
+
+UCLASS(meta = (BlueprintSpawnableComponent))
 class PROCEDURALGENERATION_API AProcGenActor : public AActor
 {
 	GENERATED_BODY()
@@ -31,6 +43,13 @@ public:
 	void JoinVertices();
 	void CombineInformation();
 	void SetMaterial();
+	
+	UFUNCTION(BluePrintCallable, Category = "Biomes")
+		colours::Biome GetBiomeType() const;
+
+	UFUNCTION(BluePrintCallable, Category = "Biomes")
+		void SetBiomeType(colours::Biome biomeType);
+
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -51,6 +70,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		UPerlinNoise_ActorComponent* Noise;	// Use this one to call from the Component
 	
+	UPROPERTY(EditAnywhere, Category = "Biome")
+		TEnumAsByte<colours::Biome> BiomeType = colours::SNOW;
+
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;
 	TArray<FVector> normals;
