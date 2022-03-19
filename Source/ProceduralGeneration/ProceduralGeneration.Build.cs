@@ -22,6 +22,7 @@ public class ProceduralGeneration : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+        // Need to add "ProceduralMeshComponent" here
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "ProceduralMeshComponent" });
 
         // Loads the LibNoise library as a static library
@@ -33,12 +34,14 @@ public class ProceduralGeneration : ModuleRules
     {
         bool isLibrarySupported = false;
 
+        // Supports Win64 and Win32
         if (Target.Platform == UnrealTargetPlatform.Win64 || Target.Platform == UnrealTargetPlatform.Win32)
         {
             isLibrarySupported = true;
             string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x86";
             string LibrariesPath = Path.Combine(ThirdPartyPath, libPath, "Libraries");
 
+            // Adds the requested library to the additional libraries list
             PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, libPath + "." + PlatformString + ".lib"));
             PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, libPath, "Includes"));
         }

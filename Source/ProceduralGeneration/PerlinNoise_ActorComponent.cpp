@@ -8,9 +8,9 @@ UPerlinNoise_ActorComponent::UPerlinNoise_ActorComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	
+	// Options updated to values set from ProcGenActor or defaults
 	UpdateOptions();
-
-	// ...
 }
 
 
@@ -19,7 +19,6 @@ void UPerlinNoise_ActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	UpdateOptions();
-	// ...
 }
 
 
@@ -27,12 +26,11 @@ void UPerlinNoise_ActorComponent::BeginPlay()
 void UPerlinNoise_ActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UPerlinNoise_ActorComponent::OnComponentCreated()
 {
+	// Options updated to values set from ProcGenActor or defaults
 	UpdateOptions();
 }
 
@@ -127,6 +125,7 @@ void UPerlinNoise_ActorComponent::SetupOptions(float frequency, float lacunarity
 }
 
 // Quality
+// These two functions below convert from the noise's native settings to the UE4 enum's setting
 noise::NoiseQuality UPerlinNoise_ActorComponent::convertBPNoiseQuality(qualities::PerlinNoiseQuality quality) const
 {
 	switch (quality)

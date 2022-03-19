@@ -16,6 +16,7 @@ namespace colours
 {
 	enum Biome
 	{
+		// Internal name | Sets name to be used for the blueprint
 		GRASS	UMETA(DisplayName = "Grasslands"),
 		DESERT	UMETA(DisplayName = "Desert"),
 		SNOW	UMETA(DisplayName = "Tundra"),
@@ -25,7 +26,7 @@ namespace colours
 	};
 }
 
-UCLASS(meta = (BlueprintSpawnableComponent))
+UCLASS(meta = (BlueprintSpawnableComponent))	// Allows blueprint to call functions
 class PROCEDURALGENERATION_API AProcGenActor : public AActor
 {
 	GENERATED_BODY()
@@ -41,6 +42,7 @@ protected:
 	virtual void PostLoad() override;
 
 public:
+	// Functions that set up the landscape
 	void CreateVertices();
 	void JoinVertices();
 	void SetColours();
@@ -56,27 +58,30 @@ public:
 
 
 private:
+	// These are private because they shouldn't be modified at runtime, but can be edited in the editor before running the game
+	// "VisibleAnywhere" can be seen but can't be changed in blueprint
 	UPROPERTY(VisibleAnywhere)
 		UProceduralMeshComponent* actorMesh;
 
+	// "EditAnywhere" can be changed in blueprint
 	UPROPERTY(EditAnywhere)
 		class UMaterial* meshMaterial;
 
+	// Default Values
 	UPROPERTY(EditAnywhere)
 		int xSize = 100;
-
 	UPROPERTY(EditAnywhere)
 		int ySize = 100;
-
 	UPROPERTY(EditAnywhere)
 		int scale = 1000;
-
 	UPROPERTY(EditAnywhere)
 		UPerlinNoise_ActorComponent* Noise;	// Use this one to call from the Component
 
+	// Gives biome type selection its own category in the blueprints
 	UPROPERTY(EditAnywhere, Category = "Biome")
 		TEnumAsByte<colours::Biome> BiomeType = colours::SNOW;	// Defaults to white landscape
 
+	// Data for landscape, should not be modified at all outside of their functions
 	TArray<FVector> vertices;
 	TArray<int32> Triangles;
 	TArray<FVector> normals;

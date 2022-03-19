@@ -14,13 +14,14 @@ namespace qualities
 {
 	enum PerlinNoiseQuality
 	{
+		// Internal name | Sets name to be used for the blueprint
 		QUALITY_FAST	UMETA(DisplayName = "Fast"),
 		QUALITY_STD		UMETA(DisplayName = "Standard"),
 		QUALITY_BEST	UMETA(DisplayName = "Best")
 	};
 }
 
-
+// Allows the class to be modified via blueprints
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROCEDURALGENERATION_API UPerlinNoise_ActorComponent : public UActorComponent
 {
@@ -44,11 +45,12 @@ public:
 		float GetValue(float x, float y, float z) const;
 
 	// Simple setup function that can set all the options at once
-	UFUNCTION(BluePrintCallable, Category = "Perlin")				// This is the enum
+	UFUNCTION(BluePrintCallable, Category = "Perlin")				// Below is the enum
 		void SetupOptions(float frequency, float lacunarity, qualities::PerlinNoiseQuality noiseQuality, int octaveCount, float persistence, int seed);
 
 	// Setters/getters for all the individual noise properties
 	// "BluePrintCallable" allows functions to be used from the blueprints
+	// All functions are in the "Perlin" category for blueprints
 	UFUNCTION(BluePrintCallable, Category = "Perlin")
 		float GetFrequency() const;
 
@@ -101,6 +103,7 @@ private:
 	void UpdateOptions();
 
 	// These are private because they shouldn't be modified at runtime, but can be edited in the editor before running the game
+	// Default values
 	UPROPERTY(EditAnywhere, Category = "Perlin")
 		float Frequency = 1.0;
 	UPROPERTY(EditAnywhere, Category = "Perlin")
